@@ -1,0 +1,26 @@
+[
+  {
+    "name": "TreasureCheat",
+    "type": 3,
+    "state": 1,
+    "realId": 1
+  },
+  {
+    "name": "Sword",
+    "type": 3,
+    "state": 0,
+    "realId": 2,
+    "propertyMap": {
+      "ATTACK": "100"
+    }
+  },
+  {
+    "name": "Shield",
+    "type": 3,
+    "state": 0,
+    "realId": 3,
+    "propertyMap": {
+      "DEFENSE": "50"
+    }
+  }
+]

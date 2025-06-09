@@ -1,0 +1,13 @@
+module service
+
+go 1.23.3
+
+require (
+	github.com/oneliang/frame-golang/context v0.0.0-20240821055338-bef804f79d1b // indirect
+	github.com/oneliang/frame-golang/http v0.0.0-20240821055338-bef804f79d1b // indirect
+	github.com/oneliang/frame-golang/ioc v0.0.0-20240821055338-bef804f79d1b // indirect
+	github.com/oneliang/util-golang/base v0.0.0-20240822133303-f8d8d60f712c // indirect
+	github.com/oneliang/util-golang/common v0.0.0-20240822133303-f8d8d60f712c // indirect
+	github.com/oneliang/util-golang/constants v0.0.0-20240822133303-f8d8d60f712c // indirect
+	github.com/oneliang/util-golang/logging v0.0.0-20240822133303-f8d8d60f712c // indirect
+)

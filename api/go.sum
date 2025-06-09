@@ -1,0 +1,14 @@
+github.com/oneliang/frame-golang/context v0.0.0-20240821055338-bef804f79d1b h1:YPTOy2qNxCSxn3Inw56goQ9yHAEqbOil5emilxLxiKg=
+github.com/oneliang/frame-golang/context v0.0.0-20240821055338-bef804f79d1b/go.mod h1:m9EhX+X3QNbFbKKgheTOen5xKOgnY3SqUqBmoEj4sYM=
+github.com/oneliang/frame-golang/http v0.0.0-20240821055338-bef804f79d1b h1:M1fLGhU91AGz6JNb/Ly1o8xDcd3+6lb1UWiCwnLOLlI=
+github.com/oneliang/frame-golang/http v0.0.0-20240821055338-bef804f79d1b/go.mod h1:BYzeODHr8FJtzHTzZIFiqaHV2Cldkrnmq00ObBlw898=
+github.com/oneliang/frame-golang/ioc v0.0.0-20240821055338-bef804f79d1b h1:cTq5U6SI4TR5CNN19FC2YalfjrrYr3RwTGsO3zApW0g=
+github.com/oneliang/frame-golang/ioc v0.0.0-20240821055338-bef804f79d1b/go.mod h1:2MnYs76/2gadzdM6mZFze5mzktaymM8q/kfjVP7AGps=
+github.com/oneliang/util-golang/base v0.0.0-20240822133303-f8d8d60f712c h1:YVZoEVD5yQnfT8tdDVgesfUFj3pJlUhdkYt9U06CSwQ=
+github.com/oneliang/util-golang/base v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:XLT7vKbe9x3sLgofi9GlJI11YT9ZzOdvZBZiai6c/W4=
+github.com/oneliang/util-golang/common v0.0.0-20240822133303-f8d8d60f712c h1:SXMB2GPfI3nTO4U/uA00a8CVe4Si/J/Y5ZPHl78kPMA=
+github.com/oneliang/util-golang/common v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:ek/ts7sJINi1eRGxyoXnoleZjCg0Ah0gPXU2U4sotcA=
+github.com/oneliang/util-golang/constants v0.0.0-20240822133303-f8d8d60f712c h1:8E2J30d+R0kM8eU0ONqcfwkRA8tE0B/CFeG4P+Fe2uU=
+github.com/oneliang/util-golang/constants v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:IOW6dE1rurRnycJKY7IJYuCOAk5yrZ2m2aFqaCW08b8=
+github.com/oneliang/util-golang/logging v0.0.0-20240822133303-f8d8d60f712c h1:DrXzIK/qbA3lhl8Oe0JFKLzuF+AXQ3TsxY6HH49WD4s=
+github.com/oneliang/util-golang/logging v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:fI4YV+WZkXC+svxzhNAj4fQ1W9b0lKMolpl8fDjws2k=

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "map_1_npc_a",
+    "type": 4,
+    "state": 0,
+    "realId": 1,
+    "propertyMap": {
+      "TALK": "Hello npc a."
+    }
+  },
+  {
+    "name": "map_1_npc_b",
+    "type": 4,
+    "state": 0,
+    "realId": 2,
+    "propertyMap": {
+      "TALK": "Hello npc b."
+    }
+  },
+  {
+    "name": "map_1_npc_c",
+    "type": 4,
+    "state": 0,
+    "realId": 3,
+    "propertyMap": {
+      "TALK": "Hello npc c."
+    }
+  }
+]

@@ -1,0 +1,8 @@
+package model
+
+const (
+	PROPERTY_KEY_ATTACK  = "ATTACK"
+	PROPERTY_KEY_DEFENSE = "DEFENSE"
+
+	PROPERTY_KEY_TALK = "TALK"
+)

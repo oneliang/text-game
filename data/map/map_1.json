@@ -1,0 +1,69 @@
+{
+  "id": 1,
+  "mapResources": [
+    [
+      {
+        "resourceId": 0
+      },
+      {
+        "resourceId": 50397185,
+        "innerResourceIdList": [
+          50331650,
+          50331650
+        ]
+      },
+      {
+        "resourceId": 50397185,
+        "innerResourceIdList": [
+          50331651,
+          50331651
+        ]
+      }
+    ],
+    [
+      {
+        "resourceId": 33619969
+      },
+      {
+        "resourceId": 33619969
+      },
+      {
+        "resourceId": 33619969
+      },
+      {
+        "resourceId": 33619969
+      },
+      {
+        "resourceId": 33619969
+      }
+    ],
+    [
+      {
+        "resourceId": 33619969
+      },
+      {
+        "resourceId": 67108865
+      },
+      {
+        "resourceId": 67108866
+      },
+      {
+        "resourceId": 67108867
+      },
+      {
+        "resourceId": 33619969
+      }
+    ],
+    [
+      {
+        "resourceId": 0
+      },
+      {
+        "resourceId": 33619969
+      },
+      {
+        "resourceId": 0
+      }
+    ]
+  ]
+}
