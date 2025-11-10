@@ -2,13 +2,18 @@ package logic
 
 import (
 	"fmt"
+	"github.com/oneliang/util-golang/logging"
+	"log_content"
 	"model"
 	"view"
 )
 
+const npcOperationLoggerTag = "NpcOperation"
+
 type NpcOperation struct {
 	currentResourceId uint32
 	resourceManager   *model.ResourceManager
+	logger            logging.Logger
 }
 
 // NewNpcOperation .
@@ -16,6 +21,7 @@ func NewNpcOperation(
 	resourceManager *model.ResourceManager) *NpcOperation {
 	return &NpcOperation{
 		resourceManager: resourceManager,
+		logger:          logging.LoggerManager.GetLogger(npcOperationLoggerTag),
 	}
 }
 
@@ -35,10 +41,11 @@ func (this *NpcOperation) Operate(event model.Event) view.Displayable {
 	case model.EVENT_NONE:
 		break
 	default:
-		fmt.Println(fmt.Sprintf("not support event, %d", event))
+		this.logger.Debug(log_content.LogContentNormal(npcOperationLoggerTag, "not support event, %d", event))
 	}
 	if err != nil {
-		fmt.Println(fmt.Sprintf("%v", err))
+
+		this.logger.Debug(log_content.LogContentNormal(npcOperationLoggerTag, "err:%+v", err))
 	}
 	return this.getView()
 }

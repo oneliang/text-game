@@ -5,15 +5,20 @@ import (
 	"fmt"
 	"github.com/oneliang/util-golang/base"
 	"github.com/oneliang/util-golang/constants"
+	"github.com/oneliang/util-golang/logging"
+	"log_content"
 	"model"
 	"strings"
 	"view"
 )
 
+const playerOperationLoggerTag = "PlayerOperation"
+
 type PlayerOperation struct {
 	player          *model.Player
 	currentIndex    int
 	resourceManager *model.ResourceManager
+	logger          logging.Logger
 }
 
 // NewPlayerOperation .
@@ -23,6 +28,7 @@ func NewPlayerOperation(
 	return &PlayerOperation{
 		player:          player,
 		resourceManager: resourceManager,
+		logger:          logging.LoggerManager.GetLogger(playerOperationLoggerTag),
 	}
 }
 
@@ -44,10 +50,10 @@ func (this *PlayerOperation) Operate(event model.Event) view.Displayable {
 	case model.EVENT_NONE:
 		break
 	default:
-		fmt.Println(fmt.Sprintf("not support event, %d", event))
+		this.logger.Debug(log_content.LogContentNormal(playerOperationLoggerTag, "not support event, %d", event))
 	}
 	if err != nil {
-		fmt.Println(fmt.Sprintf("%v", err))
+		this.logger.Debug(log_content.LogContentNormal(playerOperationLoggerTag, "err:%+v", err))
 	}
 	return this.getView()
 }
@@ -66,7 +72,7 @@ func (this *PlayerOperation) GetCurrentLocation() int {
 func (this *PlayerOperation) SetLocationResource(index uint32, resourceRealId uint32, count uint8) error {
 	totalItemLength := uint32(len(this.player.ItemList))
 
-	if index <= totalItemLength {
+	if index < totalItemLength {
 		this.player.ItemList[index] = base.NewKeyValue[uint32, uint8](resourceRealId, count)
 	} else {
 		return errors.New(fmt.Sprintf("index not match, max item length:%d, index:%d", totalItemLength, index))
@@ -126,7 +132,7 @@ func (this *PlayerOperation) ClickConfirm() error {
 		//	return errors.New(fmt.Sprintf("location resource can not set, current (x:%d, y:%d) err:%v", this.currentX, this.currentY, err))
 		//}
 	} else {
-		fmt.Println(fmt.Sprintf("can not open, current (index:%d), resource id:%x", this.currentIndex, resourceRealId))
+		this.logger.Warning(log_content.LogContentNormal(playerOperationLoggerTag, "can not open, current (index:%d), resource id:%x", this.currentIndex, resourceRealId))
 	}
 	return nil
 }
@@ -162,7 +168,7 @@ func (this *PlayerOperation) getItemViewList() []view.Displayable {
 			currentFlag = constants.EMOJI_GRINNING_FACE
 		}
 		if err != nil {
-			fmt.Println(err)
+			this.logger.Error(log_content.LogContentNormal(playerOperationLoggerTag, constants.STRING_BLANK), err)
 			stringBuilder.WriteString(fmt.Sprintf("%-24s", fmt.Sprintf("%d:ERR", index)))
 		} else {
 

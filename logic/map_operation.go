@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/oneliang/util-golang/base"
 	"github.com/oneliang/util-golang/constants"
+	"github.com/oneliang/util-golang/logging"
+	"log_content"
 	"model"
 	"strings"
 	"view"
@@ -18,6 +20,8 @@ const (
 	MAP_OPERATION_DATA_KEY_CURRENT_Y   = "CURRENT_Y"
 )
 
+const mapOperationLoggerTag = "MapOperation"
+
 type MapOperation struct {
 	player          *model.Player
 	currentMap      *model.Map
@@ -28,6 +32,7 @@ type MapOperation struct {
 	npcOperation    *NpcOperation
 	currentEvent    model.Event
 	inNextOperation bool
+	logger          logging.Logger
 }
 
 // NewMapOperation .
@@ -47,6 +52,7 @@ func NewMapOperation(
 		playerOperation: playerOperation,
 		npcOperation:    NewNpcOperation(resourceManager),
 		inNextOperation: false,
+		logger:          logging.LoggerManager.GetLogger(mapOperationLoggerTag),
 	}
 }
 
@@ -81,10 +87,10 @@ func (this *MapOperation) Operate(event model.Event) view.Displayable {
 		return this.operateNextOperation(event)
 	case model.EVENT_NONE:
 	default:
-		fmt.Println(fmt.Sprintf("not support event, %d", event))
+		this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "not support event, %d", event))
 	}
 	if err != nil {
-		fmt.Println(fmt.Sprintf("%v", err))
+		this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "err:%+v", err))
 	}
 	return this.getView()
 }
@@ -228,7 +234,7 @@ func (this *MapOperation) ClickConfirm() error {
 	case model.RESOURCE_TYPE_MAP:
 		break
 	case model.RESOURCE_TYPE_ITEM:
-		fmt.Println(fmt.Sprintf("before add the item to player, resourceId:%x", resourceId))
+		this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "before add the item to player, resourceId:%x", resourceId))
 		if model.GetResourceState(resourceId) == model.RESOURCE_ITEM_STATE_CAN_OPEN {
 			if mapResource.InnerResourceIdList != nil {
 				for _, innerResourceId := range mapResource.InnerResourceIdList {
@@ -247,7 +253,7 @@ func (this *MapOperation) ClickConfirm() error {
 				return errors.New(fmt.Sprintf("location resource can not set, current (x:%d, y:%d) err:%v", this.currentX, this.currentY, err))
 			}
 		} else {
-			fmt.Println(fmt.Sprintf("can not open, current (x:%d, y:%d), resource id:%x", this.currentX, this.currentY, resourceId))
+			this.logger.Warning(log_content.LogContentNormal(mapOperationLoggerTag, "can not open, current (x:%d, y:%d), resource id:%x", this.currentX, this.currentY, resourceId))
 		}
 		break
 	case model.RESOURCE_TYPE_NPC:
@@ -337,6 +343,7 @@ func (this *MapOperation) getTipsViewList() []view.Displayable {
 		//resourceRealId := this.resourceManager.GetResourceRealId(resourceId)
 		//mapThing, err := this.resourceManager.GetMapThing(resourceRealId)
 		if err != nil {
+
 			fmt.Println(fmt.Sprintf("%v", err))
 		}
 		event := defaultEventList[index]
@@ -359,7 +366,7 @@ func (this *MapOperation) getTipsViewList() []view.Displayable {
 
 	viewList = append(viewList, itemTipsViewList...)
 
-	viewList = append(viewList, view.NewTextView("-----CONTROL TIPS CONTENT BEGIN-----"))
+	viewList = append(viewList, view.NewTextView("-----CONTROL TIPS CONTENT END-----"))
 	return viewList
 }
 
@@ -398,11 +405,11 @@ func (this *MapOperation) LoadSavedData(dataMap map[string]any) {
 	if ok {
 		inputPlayerJson, err := json.Marshal(inputPlayer)
 		if err != nil {
-			fmt.Println(fmt.Sprintf("json.Marshal err:%+v", err))
+			this.logger.Error(log_content.LogContentNormal(mapOperationLoggerTag, "json.Marshal err"), err)
 		}
 		err = json.Unmarshal(inputPlayerJson, this.player)
 		if err != nil {
-			fmt.Println(fmt.Sprintf("json.Unmarshal err:%+v", err))
+			this.logger.Error(log_content.LogContentNormal(mapOperationLoggerTag, "json.Unmarshal err"), err)
 		}
 		//this.player = player
 
@@ -413,11 +420,11 @@ func (this *MapOperation) LoadSavedData(dataMap map[string]any) {
 	if ok {
 		inputCurrentMapJson, err := json.Marshal(inputCurrentMap)
 		if err != nil {
-			fmt.Println(fmt.Sprintf("json.Marshal err:%+v", err))
+			this.logger.Error(log_content.LogContentNormal(mapOperationLoggerTag, "json.Marshal err"), err)
 		}
 		err = json.Unmarshal(inputCurrentMapJson, this.currentMap)
 		if err != nil {
-			fmt.Println(fmt.Sprintf("json.Unmarshal err:%+v", err))
+			this.logger.Error(log_content.LogContentNormal(mapOperationLoggerTag, "json.Unmarshal err"), err)
 		}
 		//this.currentMap = currentMap
 	}

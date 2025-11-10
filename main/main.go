@@ -5,6 +5,7 @@ import (
 	gotty "github.com/mattn/go-tty"
 	"github.com/oneliang/util-golang/base"
 	"github.com/oneliang/util-golang/common"
+	"github.com/oneliang/util-golang/logging"
 	"log"
 	"logic"
 	"model"
@@ -19,6 +20,8 @@ func main() {
 	////fmt.Println(model.GenResourceId(3, 0, 3))
 	//return
 	//read all resource
+	logging.LoggerManager.RegisterLoggerByPattern("*", logging.DEFAULT_LOGGER)
+
 	saveData := ReadSavedData()
 	basicMapList := ReadMapData()
 	mapThingList := ReadMapThingData()
@@ -47,8 +50,9 @@ func main() {
 	//} else {
 	//	playerMap = model.NewPlayerMap(player, basicMapList[0], 0, 1)
 	//}
-
+	// public
 	resourceManager := model.NewResourceManager(&basicMapMap, &mapThingMap, &itemMap, &npcMap)
+	// separate by player
 	playerOperation := logic.NewPlayerOperation(player, resourceManager)
 	mapOperation := logic.NewMapOperation(player, basicMapList[0], 0, 1, resourceManager, playerOperation)
 	// new game

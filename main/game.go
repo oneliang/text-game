@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/oneliang/util-golang/constants"
 	"github.com/oneliang/util-golang/file"
+	"github.com/oneliang/util-golang/logging"
+	"log_content"
 	"logic"
 	"model"
 	"os"
@@ -13,19 +16,24 @@ import (
 	"view"
 )
 
+const loggerTag = "Game"
+
 type Game struct {
 	rootOperation   logic.Operation
 	resourceManager *model.ResourceManager
 	eventExecutor   *model.EventExecutor
+	logger          logging.Logger
 }
 
 func NewGame(resourceManager *model.ResourceManager) *Game {
+	logger := logging.LoggerManager.GetLogger(loggerTag)
 	game := &Game{
 		resourceManager: resourceManager,
+		logger:          logger,
 	}
 	eventExecutor, err := model.NewEventExecutor(game, game.realStopCallback)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("%v", err))
+		logger.Error(log_content.LogContentNormal(loggerTag, constants.STRING_BLANK), err)
 	}
 	game.eventExecutor = eventExecutor
 	return game
@@ -44,7 +52,7 @@ func (this *Game) PostEvent(event model.Event) {
 }
 
 func (this *Game) Process(event model.Event) error {
-	fmt.Println(fmt.Sprintf("event process, event:%v", event))
+	this.logger.Debug(log_content.LogContentNormal(loggerTag, "event process, event:%v", event))
 	if this.rootOperation == nil {
 		return errors.New("need to invoke SetOperation first, the operation is nil")
 	}
