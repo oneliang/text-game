@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"github.com/oneliang/util-golang/common"
 )
 
@@ -10,7 +11,7 @@ const (
 )
 
 type Map struct {
-	Id           uint32           `json:"id"`
+	*Resource
 	MapResources [][]*MapResource `json:"mapResources"`
 }
 
@@ -40,7 +41,7 @@ func NewMapWithSize(id uint32, maxXSize uint32, maxYSize uint32) *Map {
 		}
 	}
 	return &Map{
-		Id:           id,
+		Resource:     NewResource(fmt.Sprintf("Map_%d", id), RESOURCE_TYPE_MAP, RESOURCE_MAP_STATE_ENABLE, id),
 		MapResources: mapResources,
 	}
 }
@@ -57,7 +58,7 @@ func NewMapWithResourceIds(id uint32, mapResources [][]*MapResource) (*Map, erro
 	})
 
 	return &Map{
-		Id:           id,
+		Resource:     NewResource(fmt.Sprintf("Map_%d", id), RESOURCE_TYPE_MAP, RESOURCE_MAP_STATE_ENABLE, id),
 		MapResources: newMapResources,
 	}, nil
 }

@@ -1,29 +1,18 @@
 {
-  "name": "Map_1",
+  "name": "Map_2",
   "type": 1,
   "state": 1,
-  "realId": 1,
+  "realId": 2,
   "mapResources": [
     [
       {
         "resourceId": 0
       },
       {
-        "resourceId": 50397185,
-        "innerResourceIdList": [
-          50331650,
-          50331650
-        ]
+        "resourceId": 33619969
       },
       {
-        "resourceId": 50397185,
-        "innerResourceIdList": [
-          50331651,
-          50331651
-        ]
-      },
-      {
-        "resourceId": 16842754
+        "resourceId": 33619969
       }
     ],
     [

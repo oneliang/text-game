@@ -14,7 +14,10 @@ import (
 const DEBUG = true
 
 func main() {
-	//fmt.Println(model.GenResourceId(4, 0, 1))
+	//fmt.Println(fmt.Sprintf("%X", 67108865))
+	//fmt.Println(model.GenResourceId(1, 1, 1))
+	//fmt.Println(model.GenResourceId(1, 1, 2))
+	//return
 	//fmt.Println(model.GenResourceId(4, 0, 2))
 	//fmt.Println(model.GenResourceId(4, 0, 3))
 	////fmt.Println(model.GenResourceId(3, 0, 3))
@@ -29,7 +32,7 @@ func main() {
 	npcList := ReadNpcData()
 
 	basicMapMap := common.ListToMap[*model.Map, uint32](basicMapList, func(index int, item *model.Map) uint32 {
-		return item.Id
+		return item.RealId
 	})
 	mapThingMap := common.ListToMap[*model.Resource, uint32](mapThingList, func(index int, item *model.Resource) uint32 {
 		return item.RealId
@@ -54,7 +57,7 @@ func main() {
 	resourceManager := model.NewResourceManager(&basicMapMap, &mapThingMap, &itemMap, &npcMap)
 	// separate by player
 	playerOperation := logic.NewPlayerOperation(player, resourceManager)
-	mapOperation := logic.NewMapOperation(player, basicMapList[0], 0, 1, resourceManager, playerOperation)
+	mapOperation := logic.NewMapOperation(player, basicMapList[0], 0, 1, resourceManager, playerOperation, true)
 	// new game
 	game := NewGame(resourceManager)
 	game.SetRootOperation(mapOperation)

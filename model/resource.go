@@ -18,6 +18,8 @@ const (
 	// resource item state use bit set to store item state
 	RESOURCE_ITEM_STATE_NONE     uint32 = 0b0000_0000 // << 0 << RESOURCE_STATE_BIT_SIZE
 	RESOURCE_ITEM_STATE_CAN_OPEN uint32 = 0b0000_0001 // << 0 << RESOURCE_STATE_BIT_SIZE
+	RESOURCE_NPC_STATE_CAN_TALK  uint32 = 0b0000_0001 // << 0 << RESOURCE_STATE_BIT_SIZE
+	RESOURCE_MAP_STATE_ENABLE    uint32 = 0b0000_0001 // << 0 << RESOURCE_STATE_BIT_SIZE
 )
 
 type Resource struct {
@@ -26,6 +28,16 @@ type Resource struct {
 	State       uint32            `json:"state"`
 	RealId      uint32            `json:"realId"`
 	PropertyMap map[string]string `json:"propertyMap"`
+}
+
+func NewResource(name string, resourceType uint32, state uint32, readId uint32) *Resource {
+	return &Resource{
+		Name:        name,
+		Type:        resourceType,
+		State:       state,
+		RealId:      readId,
+		PropertyMap: make(map[string]string),
+	}
 }
 
 func GenResourceId(resourceType uint32, state uint32, realId uint32) uint32 {
@@ -62,8 +74,16 @@ func ResourceTypeIsNpc(resourceId uint32) bool {
 	return GetResourceType(resourceId) == RESOURCE_TYPE_NPC
 }
 
+func ResourceMapStateEnable(resourceId uint32) bool {
+	return GetResourceState(resourceId) == RESOURCE_MAP_STATE_ENABLE
+}
+
 func ResourceItemStateCanOpen(resourceId uint32) bool {
 	return GetResourceState(resourceId) == RESOURCE_ITEM_STATE_CAN_OPEN
+}
+
+func ResourceNpcStateCanTalk(resourceId uint32) bool {
+	return GetResourceState(resourceId) == RESOURCE_NPC_STATE_CAN_TALK
 }
 
 func ResourceUnsetState(resourceId uint32, resourceState uint32) uint32 {

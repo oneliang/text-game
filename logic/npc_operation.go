@@ -77,9 +77,7 @@ func (this *NpcOperation) getView() view.Displayable {
 	}
 
 	viewList = append(viewList, view.NewTextView("-----NPC CONTENT END-----"))
-	return view.NewViewGroupWithChildList(
-		viewList,
-	)
+	return view.NewViewGroup(viewList...)
 }
 
 func (this *NpcOperation) LoadSavedData(dataMap map[string]any) {

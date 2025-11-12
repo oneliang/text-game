@@ -31,8 +31,9 @@ type MapOperation struct {
 	playerOperation *PlayerOperation
 	npcOperation    *NpcOperation
 	currentEvent    model.Event
-	inNextOperation bool
 	logger          logging.Logger
+	nextOperation   Operation
+	isRootMap       bool
 }
 
 // NewMapOperation .
@@ -42,7 +43,8 @@ func NewMapOperation(
 	initializeX int,
 	initializeY int,
 	resourceManager *model.ResourceManager,
-	playerOperation *PlayerOperation) *MapOperation {
+	playerOperation *PlayerOperation,
+	isRootMap bool) *MapOperation {
 	return &MapOperation{
 		player:          player,
 		currentMap:      inputMap,
@@ -51,24 +53,23 @@ func NewMapOperation(
 		resourceManager: resourceManager,
 		playerOperation: playerOperation,
 		npcOperation:    NewNpcOperation(resourceManager),
-		inNextOperation: false,
 		logger:          logging.LoggerManager.GetLogger(mapOperationLoggerTag),
+		nextOperation:   nil,
+		isRootMap:       isRootMap,
 	}
 }
 
 // Operate .
 func (this *MapOperation) Operate(event model.Event) view.Displayable {
-	if this.inNextOperation {
+	if this.nextOperation != nil {
 		return this.operateNextOperation(event)
 	}
-	this.inNextOperation = false
 	// current operation
 	this.currentEvent = event
 	var err error = nil
 	switch event {
 	case model.EVENT_UP:
 		_, err = this.MoveUp()
-
 	case model.EVENT_DOWN:
 		_, err = this.MoveDown()
 	case model.EVENT_LEFT:
@@ -83,8 +84,16 @@ func (this *MapOperation) Operate(event model.Event) view.Displayable {
 			err = this.ClickConfirm()
 		}
 	case model.EVENT_CANCEL:
+		if this.isRootMap {
+			return this.getView()
+		} else {
+			return nil
+		}
 	case model.EVENT_MENU:
-		return this.operateNextOperation(event)
+		nextOperation := this.GetNextOperation()
+		if nextOperation != nil {
+			return this.operateNextOperation(event)
+		}
 	case model.EVENT_NONE:
 	default:
 		this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "not support event, %d", event))
@@ -105,8 +114,16 @@ func (this *MapOperation) GetNextOperation() Operation {
 		if model.GetResourceType(resourceId) == model.RESOURCE_TYPE_NPC {
 			this.npcOperation.SetCurrentNpcResourceId(resourceId)
 			operation = this.npcOperation
+		} else if model.GetResourceType(resourceId) == model.RESOURCE_TYPE_MAP {
+			resourceRealId := model.GetResourceRealId(resourceId)
+			basicMap, err := this.resourceManager.GetMap(resourceRealId)
+			if err != nil {
+				this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "err:%+v", err))
+			}
+			operation = NewMapOperation(this.player, basicMap, 0, 1, this.resourceManager, this.playerOperation, false)
 		}
 	}
+	this.nextOperation = operation
 	return operation
 }
 
@@ -288,7 +305,8 @@ func (this *MapOperation) NearbyResourceList() []*base.Tuple[int, int, uint32] {
 
 func (this *MapOperation) getMapViewList() []view.Displayable {
 	viewList := make([]view.Displayable, 0)
-	viewList = append(viewList, view.NewTextView("-----MAP CONTENT BEGIN-----"))
+	mapName := this.currentMap.Name
+	viewList = append(viewList, view.NewTextView(fmt.Sprintf("-----MAP CONTENT BEGIN-----[%s]", mapName)))
 
 	for y, rowMapResources := range this.currentMap.MapResources {
 		var stringBuilder strings.Builder
@@ -304,14 +322,13 @@ func (this *MapOperation) getMapViewList() []view.Displayable {
 			if err != nil {
 				stringBuilder.WriteString(fmt.Sprintf("%-24s", fmt.Sprintf("ERR (ID:%d)(%d, %d)", mapResource.ResourceId, x, y)))
 			} else {
-
 				stringBuilder.WriteString(fmt.Sprintf("%-24s", fmt.Sprintf("%s%s(%d, %d)[%d]", currentFlag, resource.Name, x, y, resourceState)))
 			}
 		}
 
 		viewList = append(viewList, view.NewTextView(stringBuilder.String()))
 	}
-	viewList = append(viewList, view.NewTextView("-----MAP CONTENT END-----"))
+	viewList = append(viewList, view.NewTextView(fmt.Sprintf("-----MAP CONTENT END-----[%s]", mapName)))
 	return viewList
 }
 
@@ -343,8 +360,7 @@ func (this *MapOperation) getTipsViewList() []view.Displayable {
 		//resourceRealId := this.resourceManager.GetResourceRealId(resourceId)
 		//mapThing, err := this.resourceManager.GetMapThing(resourceRealId)
 		if err != nil {
-
-			fmt.Println(fmt.Sprintf("%v", err))
+			this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "err:%+v", err))
 		}
 		event := defaultEventList[index]
 		keyCode := model.EVENT_KEY_CODE_MAPPING[event]
@@ -358,6 +374,12 @@ func (this *MapOperation) getTipsViewList() []view.Displayable {
 			if model.ResourceTypeIsItem(resourceId) && model.ResourceItemStateCanOpen(resourceId) {
 				confirmKeyCode := model.EVENT_KEY_CODE_MAPPING[model.EVENT_CONFIRM]
 				itemTipsViewList = append(itemTipsViewList, view.NewButtonView(model.EVENT_CONFIRM, fmt.Sprintf("%s: %s (x:%d, y:%d) can open", strings.ToUpper(string(confirmKeyCode)), resource.Name, this.currentX, this.currentY)))
+			} else if model.ResourceTypeIsNpc(resourceId) && model.ResourceNpcStateCanTalk(resourceId) {
+				confirmKeyCode := model.EVENT_KEY_CODE_MAPPING[model.EVENT_CONFIRM]
+				itemTipsViewList = append(itemTipsViewList, view.NewButtonView(model.EVENT_CONFIRM, fmt.Sprintf("%s: %s (x:%d, y:%d) can talk", strings.ToUpper(string(confirmKeyCode)), resource.Name, this.currentX, this.currentY)))
+			} else if model.ResourceTypeIsMap(resourceId) && model.ResourceMapStateEnable(resourceId) {
+				confirmKeyCode := model.EVENT_KEY_CODE_MAPPING[model.EVENT_CONFIRM]
+				itemTipsViewList = append(itemTipsViewList, view.NewButtonView(model.EVENT_CONFIRM, fmt.Sprintf("%s: %s (x:%d, y:%d) can in", strings.ToUpper(string(confirmKeyCode)), resource.Name, this.currentX, this.currentY)))
 			}
 		}
 	}
@@ -378,24 +400,25 @@ func (this *MapOperation) getView() view.Displayable {
 	viewList = append(viewList, mapViewList...)
 	viewList = append(viewList, tipsViewList...)
 
-	return view.NewViewGroupWithChildList(
-		viewList,
-	)
+	return view.NewViewGroup(viewList...)
 }
 
 func (this *MapOperation) operateNextOperation(event model.Event) view.Displayable {
-	nextOperation := this.GetNextOperation()
 	var nextOperationDisplayable view.Displayable = nil
-	if nextOperation != nil {
-		this.inNextOperation = true
-		nextOperationDisplayable = nextOperation.Operate(event)
+	if this.nextOperation != nil {
+		nextOperationDisplayable = this.nextOperation.Operate(event)
 	}
 	if nextOperationDisplayable == nil {
-		this.inNextOperation = false
+		this.nextOperation = nil
 		return this.getView()
 	} else {
 		cancelKeyCode := model.EVENT_KEY_CODE_MAPPING[model.EVENT_CANCEL]
-		return view.NewViewGroup(nextOperationDisplayable, view.NewButtonView(model.EVENT_CANCEL, fmt.Sprintf("%s: Return to previous", strings.ToUpper(string(cancelKeyCode)))))
+		return view.NewViewGroup(
+			nextOperationDisplayable,
+			view.NewTextView("-----OTHER CONTROL TIPS CONTENT BEGIN-----"),
+			view.NewButtonView(model.EVENT_CANCEL, fmt.Sprintf("%s: Return to previous", strings.ToUpper(string(cancelKeyCode)))),
+			view.NewTextView("-----OTHER CONTROL TIPS CONTENT END-----"),
+		)
 	}
 }
 

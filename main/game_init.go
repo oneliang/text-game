@@ -28,22 +28,29 @@ func ReadSavedData() *model.SaveData {
 
 func ReadMapData() []*model.Map {
 	basicMapList := make([]*model.Map, 0)
+	basicMap1 := readOneMapData("../data/map/map_1.json")
+	basicMap2 := readOneMapData("../data/map/map_2.json")
+	basicMapList = append(basicMapList, basicMap1)
+	basicMapList = append(basicMapList, basicMap2)
+	return basicMapList
+}
 
+func readOneMapData(filepath string) *model.Map {
 	basicMap := &model.Map{}
-	err := common.LoadJsonToObject("../data/map/map_1.json", basicMap)
+	err := common.LoadJsonToObject(filepath, basicMap)
 	if err != nil {
 		logger.Error(log_content.LogContentNormal(gameInitLoggerTag, constants.STRING_BLANK), err)
 	}
 	if DEBUG {
+		logger.Debug(log_content.LogContentNormal(gameInitLoggerTag, "map:%-24s", fmt.Sprintf("0x%x", model.GenResourceId(basicMap.Resource.Type, basicMap.Resource.State, basicMap.Resource.RealId))))
 		for _, rowMapResource := range basicMap.MapResources {
 			for _, mapResource := range rowMapResource {
-				logger.Debug(log_content.LogContentNormal(gameInitLoggerTag, "%-24s", fmt.Sprintf("0x%x", mapResource.ResourceId)))
+				logger.Debug(log_content.LogContentNormal(gameInitLoggerTag, "map resource:%-24s", fmt.Sprintf("0x%x", mapResource.ResourceId)))
 			}
 			fmt.Println()
 		}
 	}
-	basicMapList = append(basicMapList, basicMap)
-	return basicMapList
+	return basicMap
 }
 
 func ReadMapThingData() []*model.Resource {

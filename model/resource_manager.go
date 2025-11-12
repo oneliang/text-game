@@ -35,6 +35,15 @@ func NewResourceManager(
 	}
 }
 
+func (this *ResourceManager) GetMap(resourceRealId uint32) (*Map, error) {
+	mapMap := *this.mapMap
+	resourceItem, ok := mapMap[resourceRealId]
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("GetMap, map is not exist, resource real id:%d", resourceRealId))
+	}
+	return resourceItem, nil
+}
+
 func (this *ResourceManager) GetMapThing(resourceRealId uint32) (*Resource, error) {
 	mapThingMap := *this.mapThingMap
 	resourceItem, ok := mapThingMap[resourceRealId]
@@ -66,6 +75,13 @@ func (this *ResourceManager) GetResource(resourceId uint32) (*Resource, error) {
 	resourceType := GetResourceType(resourceId)
 	resourceRealId := GetResourceRealId(resourceId)
 	switch resourceType {
+	case RESOURCE_TYPE_MAP:
+		mapMap := *this.mapMap
+		resourceItem, ok := mapMap[resourceRealId]
+		if !ok {
+			return nil, errors.New(fmt.Sprintf("GetResource map is not exist, resource real id:%d", resourceRealId))
+		}
+		return resourceItem.Resource, nil
 	case RESOURCE_TYPE_MAP_THING:
 		mapThingMap := *this.mapThingMap
 		resourceItem, ok := mapThingMap[resourceRealId]

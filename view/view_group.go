@@ -18,10 +18,6 @@ func NewViewGroup(child ...Displayable) *ViewGroup {
 		ChildList: childList,
 	}
 }
-func NewViewGroupWithChildList(childList []Displayable) *ViewGroup {
-	return NewViewGroup(childList...)
-}
-
 func (this *ViewGroup) Display() string {
 	var stringBuilder strings.Builder
 

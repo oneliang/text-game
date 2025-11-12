@@ -226,9 +226,7 @@ func (this *PlayerOperation) getView() view.Displayable {
 
 	viewList = append(viewList, itemTipsViewList...)
 
-	return view.NewViewGroupWithChildList(
-		viewList,
-	)
+	return view.NewViewGroup(viewList...)
 }
 
 func (this *PlayerOperation) LoadSavedData(dataMap map[string]any) {
