@@ -34,8 +34,12 @@ func NewResourceManager(
 		resourceItemMap: resourceItemMapPointer,
 	}
 }
+func (this *ResourceManager) GetMapWithResourceId(resourceId uint32) (*Map, error) {
+	resourceRealId := GetResourceRealId(resourceId)
+	return this.GetMapWithRealId(resourceRealId)
+}
 
-func (this *ResourceManager) GetMap(resourceRealId uint32) (*Map, error) {
+func (this *ResourceManager) GetMapWithRealId(resourceRealId uint32) (*Map, error) {
 	mapMap := *this.mapMap
 	resourceItem, ok := mapMap[resourceRealId]
 	if !ok {
@@ -44,7 +48,12 @@ func (this *ResourceManager) GetMap(resourceRealId uint32) (*Map, error) {
 	return resourceItem, nil
 }
 
-func (this *ResourceManager) GetMapThing(resourceRealId uint32) (*Resource, error) {
+func (this *ResourceManager) GetMapThingWithResourceId(resourceId uint32) (*Resource, error) {
+	resourceRealId := GetResourceRealId(resourceId)
+	return this.GetMapThingWithRealId(resourceRealId)
+}
+
+func (this *ResourceManager) GetMapThingWithRealId(resourceRealId uint32) (*Resource, error) {
 	mapThingMap := *this.mapThingMap
 	resourceItem, ok := mapThingMap[resourceRealId]
 	if !ok {
@@ -53,7 +62,11 @@ func (this *ResourceManager) GetMapThing(resourceRealId uint32) (*Resource, erro
 	return resourceItem, nil
 }
 
-func (this *ResourceManager) GetItem(resourceRealId uint32) (*Resource, error) {
+func (this *ResourceManager) GetItemWithResourceId(resourceId uint32) (*Resource, error) {
+	resourceRealId := GetResourceRealId(resourceId)
+	return this.GetItemWithRealId(resourceRealId)
+}
+func (this *ResourceManager) GetItemWithRealId(resourceRealId uint32) (*Resource, error) {
 	itemMap := *this.itemMap
 	resourceItem, ok := itemMap[resourceRealId]
 	if !ok {
@@ -62,7 +75,12 @@ func (this *ResourceManager) GetItem(resourceRealId uint32) (*Resource, error) {
 	return resourceItem, nil
 }
 
-func (this *ResourceManager) GetNpc(resourceRealId uint32) (*Resource, error) {
+func (this *ResourceManager) GetNpcWithResourceId(resourceId uint32) (*Resource, error) {
+	resourceRealId := GetResourceRealId(resourceId)
+	return this.GetNpcWithRealId(resourceRealId)
+}
+
+func (this *ResourceManager) GetNpcWithRealId(resourceRealId uint32) (*Resource, error) {
 	npcMap := *this.npcMap
 	resourceItem, ok := npcMap[resourceRealId]
 	if !ok {

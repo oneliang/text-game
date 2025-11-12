@@ -19,17 +19,19 @@ import (
 const loggerTag = "Game"
 
 type Game struct {
-	rootOperation   logic.Operation
-	resourceManager *model.ResourceManager
-	eventExecutor   *model.EventExecutor
-	logger          logging.Logger
+	rootOperation     logic.Operation
+	playerDataManager *model.PlayerDataManager
+	resourceManager   *model.ResourceManager
+	eventExecutor     *model.EventExecutor
+	logger            logging.Logger
 }
 
-func NewGame(resourceManager *model.ResourceManager) *Game {
+func NewGame(playerDataManager *model.PlayerDataManager, resourceManager *model.ResourceManager) *Game {
 	logger := logging.LoggerManager.GetLogger(loggerTag)
 	game := &Game{
-		resourceManager: resourceManager,
-		logger:          logger,
+		playerDataManager: playerDataManager,
+		resourceManager:   resourceManager,
+		logger:            logger,
 	}
 	eventExecutor, err := model.NewEventExecutor(game, game.realStopCallback)
 	if err != nil {
@@ -89,7 +91,7 @@ func (this *Game) SaveGame(outputFullFilename string) error {
 	}
 	writer := bufio.NewWriter(outputFile)
 
-	dataMap := this.rootOperation.GetNeedToSavedData()
+	dataMap := this.playerDataManager.GetNeedToSavedData()
 
 	saveData := &model.SaveData{
 		DataMap: dataMap,

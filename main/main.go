@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	gotty "github.com/mattn/go-tty"
-	"github.com/oneliang/util-golang/base"
 	"github.com/oneliang/util-golang/common"
 	"github.com/oneliang/util-golang/logging"
 	"log"
@@ -25,7 +24,6 @@ func main() {
 	//read all resource
 	logging.LoggerManager.RegisterLoggerByPattern("*", logging.DEFAULT_LOGGER)
 
-	saveData := ReadSavedData()
 	basicMapList := ReadMapData()
 	mapThingList := ReadMapThingData()
 	itemList := ReadItemData()
@@ -45,7 +43,7 @@ func main() {
 	})
 	fmt.Println(fmt.Sprintf("item map:%+v", itemMap))
 	fmt.Println(fmt.Sprintf("npc map:%+v", npcMap))
-	player := model.NewPlayer(make([]*base.KeyValue[uint32, uint8], 0))
+	//player := model.NewPlayer(1, make([]*base.KeyValue[uint32, uint8], 0))
 
 	//var playerMap *model.PlayerMap = nil
 	//if saveData.PlayerMap != nil {
@@ -55,14 +53,18 @@ func main() {
 	//}
 	// public
 	resourceManager := model.NewResourceManager(&basicMapMap, &mapThingMap, &itemMap, &npcMap)
+	saveData := ReadSavedData()
+	playerDataManager := model.NewPlayerDataManager(resourceManager)
+	playerDataManager.LoadSavedData(saveData.DataMap)
 	// separate by player
-	playerOperation := logic.NewPlayerOperation(player, resourceManager)
-	mapOperation := logic.NewMapOperation(player, basicMapList[0], 0, 1, resourceManager, playerOperation, true)
+	//playerOperation := logic.NewPlayerOperation(player, resourceManager)
+	//mapOperation := logic.NewMapOperation(player, basicMapList[0], 0, 1, resourceManager, playerOperation, true)
+	systemOperation := logic.NewSystemOperation(resourceManager, playerDataManager)
 	// new game
-	game := NewGame(resourceManager)
-	game.SetRootOperation(mapOperation)
+	game := NewGame(playerDataManager, resourceManager)
+	game.SetRootOperation(systemOperation)
 
-	mapOperation.LoadSavedData(saveData.DataMap)
+	//mapOperation.LoadSavedData(saveData.DataMap)
 
 	game.Start()
 	//game.PostEvent(model.EVENT_RIGHT)

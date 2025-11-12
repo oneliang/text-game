@@ -11,10 +11,4 @@ type Operation interface {
 
 	// GetNextOperation .
 	GetNextOperation() Operation
-
-	// LoadSavedData .
-	LoadSavedData(dataMap map[string]any)
-
-	// GetNeedToSavedData .
-	GetNeedToSavedData() map[string]any
 }

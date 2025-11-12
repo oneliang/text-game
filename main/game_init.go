@@ -18,7 +18,7 @@ func ReadSavedData() *model.SaveData {
 
 	err := common.LoadJsonToObject("../data/save/saved_0.json", saveData)
 	if err != nil {
-		logger.Error(log_content.LogContentNormal(gameInitLoggerTag, constants.STRING_BLANK), err)
+		logger.Debug(log_content.LogContentNormal(gameInitLoggerTag, "err:%+v", err))
 	}
 	if DEBUG {
 

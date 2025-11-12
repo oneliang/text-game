@@ -7,15 +7,17 @@ import (
 
 type Player struct {
 	//[resourceId,count]
+	Id           int32                           `json:"id"`
 	ItemList     []*base.KeyValue[uint32, uint8] `json:"itemList"`
 	ItemIndexMap map[uint32]uint32               `json:"itemIndexMap"`
 }
 
-func NewPlayer(itemList []*base.KeyValue[uint32, uint8]) *Player {
+func NewPlayer(id int32, itemList []*base.KeyValue[uint32, uint8]) *Player {
 	itemIndexMap := common.ListToNewMap[*base.KeyValue[uint32, uint8], uint32, uint32](itemList, func(index int, item *base.KeyValue[uint32, uint8]) (uint32, uint32) {
 		return item.Key, uint32(index)
 	})
 	return &Player{
+		Id:           id,
 		ItemList:     itemList,
 		ItemIndexMap: itemIndexMap,
 	}

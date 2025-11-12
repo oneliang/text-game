@@ -23,39 +23,41 @@ const (
 const mapOperationLoggerTag = "MapOperation"
 
 type MapOperation struct {
-	player          *model.Player
-	currentMap      *model.Map
-	currentX        int
-	currentY        int
-	resourceManager *model.ResourceManager
-	playerOperation *PlayerOperation
-	npcOperation    *NpcOperation
-	currentEvent    model.Event
-	logger          logging.Logger
-	nextOperation   Operation
-	isRootMap       bool
+	mapResourceId     uint32
+	currentX          int
+	currentY          int
+	resourceManager   *model.ResourceManager
+	playerDataManager *model.PlayerDataManager
+	currentEvent      model.Event
+	logger            logging.Logger
+	nextOperation     Operation
+	isRootMap         bool
+	player            *model.Player
+	currentMap        *model.Map
 }
 
 // NewMapOperation .
 func NewMapOperation(
-	player *model.Player,
-	inputMap *model.Map,
+	mapResourceId uint32,
 	initializeX int,
 	initializeY int,
 	resourceManager *model.ResourceManager,
-	playerOperation *PlayerOperation,
-	isRootMap bool) *MapOperation {
+	playerDataManager *model.PlayerDataManager,
+	isRootMap bool,
+) *MapOperation {
+	player := playerDataManager.GetPlayer()
+	currentMap := playerDataManager.GetMap(mapResourceId)
 	return &MapOperation{
-		player:          player,
-		currentMap:      inputMap,
-		currentX:        initializeX,
-		currentY:        initializeY,
-		resourceManager: resourceManager,
-		playerOperation: playerOperation,
-		npcOperation:    NewNpcOperation(resourceManager),
-		logger:          logging.LoggerManager.GetLogger(mapOperationLoggerTag),
-		nextOperation:   nil,
-		isRootMap:       isRootMap,
+		mapResourceId:     mapResourceId,
+		player:            player,
+		currentMap:        currentMap,
+		currentX:          initializeX,
+		currentY:          initializeY,
+		resourceManager:   resourceManager,
+		playerDataManager: playerDataManager,
+		logger:            logging.LoggerManager.GetLogger(mapOperationLoggerTag),
+		nextOperation:     nil,
+		isRootMap:         isRootMap,
 	}
 }
 
@@ -108,19 +110,15 @@ func (this *MapOperation) Operate(event model.Event) view.Displayable {
 func (this *MapOperation) GetNextOperation() Operation {
 	var operation Operation = nil
 	if this.currentEvent == model.EVENT_MENU {
-		operation = this.playerOperation
+		operation = NewPlayerOperation(this.resourceManager, this.playerDataManager)
 	} else if this.currentEvent == model.EVENT_CONFIRM {
 		resourceId, _ := this.GetCurrentLocationResourceId()
 		if model.GetResourceType(resourceId) == model.RESOURCE_TYPE_NPC {
-			this.npcOperation.SetCurrentNpcResourceId(resourceId)
-			operation = this.npcOperation
+			npcOperation := NewNpcOperation(this.resourceManager)
+			npcOperation.SetCurrentNpcResourceId(resourceId)
+			operation = npcOperation
 		} else if model.GetResourceType(resourceId) == model.RESOURCE_TYPE_MAP {
-			resourceRealId := model.GetResourceRealId(resourceId)
-			basicMap, err := this.resourceManager.GetMap(resourceRealId)
-			if err != nil {
-				this.logger.Debug(log_content.LogContentNormal(mapOperationLoggerTag, "err:%+v", err))
-			}
-			operation = NewMapOperation(this.player, basicMap, 0, 1, this.resourceManager, this.playerOperation, false)
+			operation = NewMapOperation(resourceId, 0, 1, this.resourceManager, this.playerDataManager, false)
 		}
 	}
 	this.nextOperation = operation

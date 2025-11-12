@@ -15,20 +15,23 @@ import (
 const playerOperationLoggerTag = "PlayerOperation"
 
 type PlayerOperation struct {
-	player          *model.Player
-	currentIndex    int
-	resourceManager *model.ResourceManager
-	logger          logging.Logger
+	player            *model.Player
+	currentIndex      int
+	resourceManager   *model.ResourceManager
+	playerDataManager *model.PlayerDataManager
+	logger            logging.Logger
 }
 
 // NewPlayerOperation .
 func NewPlayerOperation(
-	player *model.Player,
-	resourceManager *model.ResourceManager) *PlayerOperation {
+	resourceManager *model.ResourceManager,
+	playerDataManager *model.PlayerDataManager,
+) *PlayerOperation {
 	return &PlayerOperation{
-		player:          player,
-		resourceManager: resourceManager,
-		logger:          logging.LoggerManager.GetLogger(playerOperationLoggerTag),
+		resourceManager:   resourceManager,
+		playerDataManager: playerDataManager,
+		player:            playerDataManager.GetPlayer(),
+		logger:            logging.LoggerManager.GetLogger(playerOperationLoggerTag),
 	}
 }
 
@@ -122,7 +125,7 @@ func (this *PlayerOperation) ClickConfirm() error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("location resource can not confirm, current (index:%d)", this.currentIndex))
 	}
-	resource, err := this.resourceManager.GetItem(resourceRealId)
+	resource, err := this.resourceManager.GetItemWithRealId(resourceRealId)
 	if resource.State == model.RESOURCE_ITEM_STATE_CAN_OPEN && count > 0 {
 		//add item to player item list
 		this.player.DeleteItem(resourceRealId)
@@ -162,7 +165,7 @@ func (this *PlayerOperation) getItemViewList() []view.Displayable {
 	for index, item := range this.player.ItemList {
 		var stringBuilder strings.Builder
 		resourceRealId := item.Key
-		itemResource, err := this.resourceManager.GetItem(resourceRealId)
+		itemResource, err := this.resourceManager.GetItemWithRealId(resourceRealId)
 		currentFlag := constants.STRING_BLANK
 		if this.currentIndex == index {
 			currentFlag = constants.EMOJI_GRINNING_FACE
@@ -202,7 +205,7 @@ func (this *PlayerOperation) getView() view.Displayable {
 		}
 		currentIndex := locationResourceTuple.First
 		resourceRealId := locationResourceTuple.Second
-		itemResource, err := this.resourceManager.GetItem(resourceRealId)
+		itemResource, err := this.resourceManager.GetItemWithRealId(resourceRealId)
 		//resourceRealId := this.resourceManager.GetResourceRealId(resourceId)
 		//mapThing, err := this.resourceManager.GetMapThing(resourceRealId)
 		if err != nil {
@@ -227,12 +230,4 @@ func (this *PlayerOperation) getView() view.Displayable {
 	viewList = append(viewList, itemTipsViewList...)
 
 	return view.NewViewGroup(viewList...)
-}
-
-func (this *PlayerOperation) LoadSavedData(dataMap map[string]any) {
-
-}
-
-func (this *PlayerOperation) GetNeedToSavedData() map[string]any {
-	return nil
 }

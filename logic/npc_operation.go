@@ -66,7 +66,7 @@ func (this *NpcOperation) getView() view.Displayable {
 	viewList = append(viewList, view.NewTextView("-----NPC CONTENT BEGIN-----"))
 
 	resourceRealId := model.GetResourceRealId(resourceId)
-	resource, err := this.resourceManager.GetNpc(resourceRealId)
+	resource, err := this.resourceManager.GetNpcWithRealId(resourceRealId)
 	if err != nil {
 		viewList = append(viewList, view.NewTextView(fmt.Sprintf("%-24s", fmt.Sprintf("ERR:%v", err))))
 	}
@@ -78,12 +78,4 @@ func (this *NpcOperation) getView() view.Displayable {
 
 	viewList = append(viewList, view.NewTextView("-----NPC CONTENT END-----"))
 	return view.NewViewGroup(viewList...)
-}
-
-func (this *NpcOperation) LoadSavedData(dataMap map[string]any) {
-
-}
-
-func (this *NpcOperation) GetNeedToSavedData() map[string]any {
-	return nil
 }
