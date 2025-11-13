@@ -16,7 +16,7 @@ import (
 	"view"
 )
 
-const loggerTag = "Game"
+const gameLoggerTag = "Game"
 
 type Game struct {
 	rootOperation     logic.Operation
@@ -27,15 +27,14 @@ type Game struct {
 }
 
 func NewGame(playerDataManager *model.PlayerDataManager, resourceManager *model.ResourceManager) *Game {
-	logger := logging.LoggerManager.GetLogger(loggerTag)
 	game := &Game{
 		playerDataManager: playerDataManager,
 		resourceManager:   resourceManager,
-		logger:            logger,
+		logger:            logging.LoggerManager.GetLogger(gameLoggerTag),
 	}
 	eventExecutor, err := model.NewEventExecutor(game, game.realStopCallback)
 	if err != nil {
-		logger.Error(log_content.LogContentNormal(loggerTag, constants.STRING_BLANK), err)
+		game.logger.Error(log_content.LogContentNormal(gameLoggerTag, constants.STRING_BLANK), err)
 	}
 	game.eventExecutor = eventExecutor
 	return game
@@ -54,7 +53,7 @@ func (this *Game) PostEvent(event model.Event) {
 }
 
 func (this *Game) Process(event model.Event) error {
-	this.logger.Debug(log_content.LogContentNormal(loggerTag, "event process, event:%v", event))
+	this.logger.Debug(log_content.LogContentNormal(gameLoggerTag, "event process, event:%v", event))
 	if this.rootOperation == nil {
 		return errors.New("need to invoke SetOperation first, the operation is nil")
 	}
