@@ -14,6 +14,8 @@ github.com/oneliang/util-golang/base v0.0.0-20250508101609-34c606e0cc6d h1:bQEoK
 github.com/oneliang/util-golang/base v0.0.0-20250508101609-34c606e0cc6d/go.mod h1:XLT7vKbe9x3sLgofi9GlJI11YT9ZzOdvZBZiai6c/W4=
 github.com/oneliang/util-golang/base v0.0.0-20250510022855-30b3a3e358ec h1:N0bHpViOc/7XLoY4scOvqH3czNgTr71kUHfsPzEXfXk=
 github.com/oneliang/util-golang/base v0.0.0-20250510022855-30b3a3e358ec/go.mod h1:XLT7vKbe9x3sLgofi9GlJI11YT9ZzOdvZBZiai6c/W4=
+github.com/oneliang/util-golang/base v0.0.0-20251114092906-fea6a0e06f15 h1:cMYTz0/lSJY/fu2s3hexa7w9Gmc+E4bssn/HeP7NJts=
+github.com/oneliang/util-golang/base v0.0.0-20251114092906-fea6a0e06f15/go.mod h1:XLT7vKbe9x3sLgofi9GlJI11YT9ZzOdvZBZiai6c/W4=
 github.com/oneliang/util-golang/common v0.0.0-20240822133303-f8d8d60f712c h1:SXMB2GPfI3nTO4U/uA00a8CVe4Si/J/Y5ZPHl78kPMA=
 github.com/oneliang/util-golang/common v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:ek/ts7sJINi1eRGxyoXnoleZjCg0Ah0gPXU2U4sotcA=
 github.com/oneliang/util-golang/common v0.0.0-20250107091240-ffda63863297 h1:LgOxE0Gh554YJsn2saOv+5wWmBQHUWfZ9dIBR4584BA=
@@ -24,6 +26,8 @@ github.com/oneliang/util-golang/common v0.0.0-20250508101609-34c606e0cc6d h1:GMj
 github.com/oneliang/util-golang/common v0.0.0-20250508101609-34c606e0cc6d/go.mod h1:ek/ts7sJINi1eRGxyoXnoleZjCg0Ah0gPXU2U4sotcA=
 github.com/oneliang/util-golang/common v0.0.0-20250510022855-30b3a3e358ec h1:0OpzriYSzMB0Bg28jJIql06tDHrnK+sxF3WfGFNQ1So=
 github.com/oneliang/util-golang/common v0.0.0-20250510022855-30b3a3e358ec/go.mod h1:ek/ts7sJINi1eRGxyoXnoleZjCg0Ah0gPXU2U4sotcA=
+github.com/oneliang/util-golang/common v0.0.0-20251114092906-fea6a0e06f15 h1:BDhmesmWUk95+rFOzRuyFFkpjFJa2V8dmsQt5CThWfk=
+github.com/oneliang/util-golang/common v0.0.0-20251114092906-fea6a0e06f15/go.mod h1:ek/ts7sJINi1eRGxyoXnoleZjCg0Ah0gPXU2U4sotcA=
 github.com/oneliang/util-golang/concurrent v0.0.0-20250107091240-ffda63863297/go.mod h1:3Gidu9OeMe6sTxsaXoONUkigV5myqX2GsEZlCnx2MEA=
 github.com/oneliang/util-golang/constants v0.0.0-20240822133303-f8d8d60f712c h1:8E2J30d+R0kM8eU0ONqcfwkRA8tE0B/CFeG4P+Fe2uU=
 github.com/oneliang/util-golang/constants v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:IOW6dE1rurRnycJKY7IJYuCOAk5yrZ2m2aFqaCW08b8=
@@ -35,6 +39,8 @@ github.com/oneliang/util-golang/constants v0.0.0-20250508101609-34c606e0cc6d h1:
 github.com/oneliang/util-golang/constants v0.0.0-20250508101609-34c606e0cc6d/go.mod h1:IOW6dE1rurRnycJKY7IJYuCOAk5yrZ2m2aFqaCW08b8=
 github.com/oneliang/util-golang/constants v0.0.0-20250510022855-30b3a3e358ec h1:+TzahjRVrHUmTRCW/pdSYtmhjQfTUxWq4eC+desPeNU=
 github.com/oneliang/util-golang/constants v0.0.0-20250510022855-30b3a3e358ec/go.mod h1:IOW6dE1rurRnycJKY7IJYuCOAk5yrZ2m2aFqaCW08b8=
+github.com/oneliang/util-golang/constants v0.0.0-20251114092906-fea6a0e06f15 h1:VnfUUDSdaim4OjsO6tcYqsqh/3lpGQT2oaD5y4fOOfA=
+github.com/oneliang/util-golang/constants v0.0.0-20251114092906-fea6a0e06f15/go.mod h1:IOW6dE1rurRnycJKY7IJYuCOAk5yrZ2m2aFqaCW08b8=
 github.com/oneliang/util-golang/logging v0.0.0-20240822133303-f8d8d60f712c h1:DrXzIK/qbA3lhl8Oe0JFKLzuF+AXQ3TsxY6HH49WD4s=
 github.com/oneliang/util-golang/logging v0.0.0-20240822133303-f8d8d60f712c/go.mod h1:fI4YV+WZkXC+svxzhNAj4fQ1W9b0lKMolpl8fDjws2k=
 github.com/oneliang/util-golang/logging v0.0.0-20250107091240-ffda63863297 h1:Z+mCKkmvcBVVdqG7bno4v021rRTX2Or3339Ou8NVDaY=

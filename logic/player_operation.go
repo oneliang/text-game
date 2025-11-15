@@ -19,6 +19,7 @@ type PlayerOperation struct {
 	currentIndex      int
 	resourceManager   *model.ResourceManager
 	playerDataManager *model.PlayerDataManager
+	operationManager  *OperationManager
 	logger            logging.Logger
 }
 
@@ -64,6 +65,11 @@ func (this *PlayerOperation) Operate(event model.Event) view.Displayable {
 // GetNextOperation .
 func (this *PlayerOperation) GetNextOperation() Operation {
 	return nil
+}
+
+// SetOperationManager .
+func (this *PlayerOperation) SetOperationManager(operationManager *OperationManager) {
+	this.operationManager = operationManager
 }
 
 // GetCurrentLocation .

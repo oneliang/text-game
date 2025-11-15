@@ -23,13 +23,15 @@ type Game struct {
 	playerDataManager *model.PlayerDataManager
 	resourceManager   *model.ResourceManager
 	eventExecutor     *model.EventExecutor
+	operationManager  *logic.OperationManager
 	logger            logging.Logger
 }
 
-func NewGame(playerDataManager *model.PlayerDataManager, resourceManager *model.ResourceManager) *Game {
+func NewGame(resourceManager *model.ResourceManager, playerDataManager *model.PlayerDataManager) *Game {
 	game := &Game{
 		playerDataManager: playerDataManager,
 		resourceManager:   resourceManager,
+		operationManager:  logic.NewOperationManager(),
 		logger:            logging.LoggerManager.GetLogger(gameLoggerTag),
 	}
 	eventExecutor, err := model.NewEventExecutor(game, game.realStopCallback)
@@ -37,12 +39,15 @@ func NewGame(playerDataManager *model.PlayerDataManager, resourceManager *model.
 		game.logger.Error(log_content.LogContentNormal(gameLoggerTag, constants.STRING_BLANK), err)
 	}
 	game.eventExecutor = eventExecutor
+	systemOperation := logic.NewSystemOperation(resourceManager, playerDataManager)
+	systemOperation.SetOperationManager(game.operationManager)
+	game.rootOperation = systemOperation
 	return game
 }
 
-func (this *Game) SetRootOperation(rootOperation logic.Operation) {
-	this.rootOperation = rootOperation
-}
+//func (this *Game) SetRootOperation(rootOperation logic.Operation) {
+//	this.rootOperation = rootOperation
+//}
 
 func (this *Game) Start() {
 

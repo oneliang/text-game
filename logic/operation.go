@@ -11,4 +11,7 @@ type Operation interface {
 
 	// GetNextOperation .
 	GetNextOperation() Operation
+
+	// SetOperationManager .
+	SetOperationManager(operationManager *OperationManager)
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/oneliang/util-golang/common"
 	"github.com/oneliang/util-golang/logging"
 	"log"
-	"logic"
 	"model"
 )
 
@@ -49,10 +48,10 @@ func main() {
 	playerDataManager := model.NewPlayerDataManager(resourceManager)
 	playerDataManager.LoadSavedData(saveData.DataMap)
 	// separate by player
-	systemOperation := logic.NewSystemOperation(resourceManager, playerDataManager)
+	//systemOperation := logic.NewSystemOperation(resourceManager, playerDataManager)
 	// new game
-	game := NewGame(playerDataManager, resourceManager)
-	game.SetRootOperation(systemOperation)
+	game := NewGame(resourceManager, playerDataManager)
+	//game.SetRootOperation(systemOperation)
 
 	game.Start()
 	//game.PostEvent(model.EVENT_RIGHT)

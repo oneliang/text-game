@@ -28,6 +28,7 @@ type MapOperation struct {
 	currentY          int
 	resourceManager   *model.ResourceManager
 	playerDataManager *model.PlayerDataManager
+	operationManager  *OperationManager
 	currentEvent      model.Event
 	logger            logging.Logger
 	nextOperation     Operation
@@ -110,19 +111,26 @@ func (this *MapOperation) Operate(event model.Event) view.Displayable {
 func (this *MapOperation) GetNextOperation() Operation {
 	var operation Operation = nil
 	if this.currentEvent == model.EVENT_MENU {
-		operation = NewPlayerOperation(this.resourceManager, this.playerDataManager)
+		operation = this.operationManager.NewPlayerOperation(this.resourceManager, this.playerDataManager)
 	} else if this.currentEvent == model.EVENT_CONFIRM {
 		resourceId, _ := this.GetCurrentLocationResourceId()
 		if model.GetResourceType(resourceId) == model.RESOURCE_TYPE_NPC {
-			npcOperation := NewNpcOperation(this.resourceManager)
-			npcOperation.SetCurrentNpcResourceId(resourceId)
+			npcOperation := this.operationManager.NewNpcOperation(this.resourceManager, resourceId)
 			operation = npcOperation
 		} else if model.GetResourceType(resourceId) == model.RESOURCE_TYPE_MAP {
-			operation = NewMapOperation(resourceId, 0, 1, this.resourceManager, this.playerDataManager, false)
+			operation = this.operationManager.NewMapOperation(resourceId, 0, 1, this.resourceManager, this.playerDataManager, false)
 		}
+	}
+	if operation != nil {
+		operation.SetOperationManager(this.operationManager)
 	}
 	this.nextOperation = operation
 	return operation
+}
+
+// SetOperationManager .
+func (this *MapOperation) SetOperationManager(operationManager *OperationManager) {
+	this.operationManager = operationManager
 }
 
 // GetCurrentLocation .
@@ -407,17 +415,11 @@ func (this *MapOperation) operateNextOperation(event model.Event) view.Displayab
 		nextOperationDisplayable = this.nextOperation.Operate(event)
 	}
 	if nextOperationDisplayable == nil {
+		this.operationManager.DestroyOperation(this.nextOperation)
 		this.nextOperation = nil
 		return this.getView()
-	} else {
-		cancelKeyCode := model.EVENT_KEY_CODE_MAPPING[model.EVENT_CANCEL]
-		return view.NewViewGroup(
-			nextOperationDisplayable,
-			view.NewTextView("-----OTHER CONTROL TIPS CONTENT BEGIN-----"),
-			view.NewButtonView(model.EVENT_CANCEL, fmt.Sprintf("%s: Return to previous", strings.ToUpper(string(cancelKeyCode)))),
-			view.NewTextView("-----OTHER CONTROL TIPS CONTENT END-----"),
-		)
 	}
+	return nextOperationDisplayable
 }
 
 func (this *MapOperation) LoadSavedData(dataMap map[string]any) {

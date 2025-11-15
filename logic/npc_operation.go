@@ -13,6 +13,7 @@ const npcOperationLoggerTag = "NpcOperation"
 type NpcOperation struct {
 	currentResourceId uint32
 	resourceManager   *model.ResourceManager
+	operationManager  *OperationManager
 	logger            logging.Logger
 }
 
@@ -53,6 +54,11 @@ func (this *NpcOperation) Operate(event model.Event) view.Displayable {
 // GetNextOperation .
 func (this *NpcOperation) GetNextOperation() Operation {
 	return nil
+}
+
+// SetOperationManager .
+func (this *NpcOperation) SetOperationManager(operationManager *OperationManager) {
+	this.operationManager = operationManager
 }
 
 func (this *NpcOperation) getView() view.Displayable {
